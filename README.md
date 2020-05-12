@@ -1,3 +1,3 @@
 # AlgorithmVisualiser
  
-A simple application to visualize various sorting and pathfinding algorithms.
+A simple application built from scratch to visualize various sorting and pathfinding algorithms.
