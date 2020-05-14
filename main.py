@@ -10,16 +10,17 @@ class App:
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
-    FPS = 60
-    WIDTH, HEIGHT = 700, 400
-    LINE_HEIGHT = 20
-    FONT_SIZE = 16
+    MAX_FPS = 240
+    WIDTH, HEIGHT = 800, 400
+    LINE_HEIGHT = 18
+    FONT_SIZE = 12
     INSTRUCTIONS = [
         "[ R ]-( reshuffle )  [ S ]-( step over )  [ A ]-( toggle auto step over )",
         "[ LEFT ]-( rotate left algorithm )  [ RIGHT ]-( rotate right algorithm )",
         "[ UP ]-( Elements * 10 )  [ DOWN ]-( Elements / 10 )"
     ]
-    PADDING = (110, (len(INSTRUCTIONS) + 1) * LINE_HEIGHT)
+    SELECTION_COLUMN_WIDTH = 140
+    PADDING = (150, (len(INSTRUCTIONS) + 1) * LINE_HEIGHT)
 
     def __init__(self):
         self._running = True
@@ -61,16 +62,16 @@ class App:
         for i in range(len(instructions)):
             self._instructions.append(self._create_label((0, App.HEIGHT - (i + 1) * App.LINE_HEIGHT), instructions[i], App.WHITE, App.BLACK))
 
-        self._auto_step_over_label = self._create_label((0, 40), "running...", App.WHITE, App.BLACK)
+        self._auto_step_over_label = self._create_label((0, App.LINE_HEIGHT * 3), "running...", App.WHITE, App.BLACK)
         self._running = True
         self._algorithms = []
         for i in sorting_algorithms:
-            glyph = self._create_label((App.WIDTH - 100, 0), i.__name__, App.WHITE, App.BLACK)
-            glyph_selected = self._create_label((App.WIDTH - 100, 0), i.__name__, App.GREEN, App.BLACK)
+            glyph = self._create_label((App.WIDTH - App.SELECTION_COLUMN_WIDTH, 0), i.__name__, App.WHITE, App.BLACK)
+            glyph_selected = self._create_label((App.WIDTH - App.SELECTION_COLUMN_WIDTH, 0), i.__name__, App.GREEN, App.BLACK)
             self._algorithms.append((i, glyph, glyph_selected))
 
         self._set_algorithm(sorting_algorithms[self._selection])
-        self._set_latency(16)
+        self._set_latency(8)
         self._set_number_of_elements(0)
 
     def on_event(self, event):
@@ -82,7 +83,7 @@ class App:
 
     def on_loop(self, deltaTime):
         self._delay -= deltaTime
-        if self._delay < 0 and self._auto:
+        while self._delay < 0 and self._auto:
             self._next_step()
             self._delay = self._latency[0]
 
@@ -134,7 +135,7 @@ class App:
         while( self._running ):
             for event in pygame.event.get():
                 self.on_event(event)
-            self.on_loop(self._clock.tick(App.FPS))
+            self.on_loop(self._clock.tick(App.MAX_FPS))
             self.on_render()
         self.on_cleanup()
 
@@ -223,7 +224,6 @@ class App:
     def _draw_bar(self, incrementX, incrementY, index, color):
         bounds = (App.PADDING[0] + incrementX * index, App.HEIGHT - App.PADDING[1], incrementX-1, -incrementY * (self._data[index] + 1) +1)
         pygame.draw.rect(self._display_surface, color, bounds)
-
 
 if __name__ == "__main__" :
     theApp = App()
