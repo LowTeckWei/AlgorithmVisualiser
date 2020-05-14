@@ -4,6 +4,7 @@ from sorters import *
 
 class App:
 
+    TITLE = 'AlgorithmVisualiser'
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     RED = (255, 0, 0)
@@ -55,6 +56,7 @@ class App:
 
     def on_init(self):
         pygame.init()
+        pygame.display.set_caption(App.TITLE)
         self._display_surface = pygame.display.set_mode((App.WIDTH, App.HEIGHT), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._font = pygame.font.SysFont('arial', App.FONT_SIZE)
         self._instructions = []
